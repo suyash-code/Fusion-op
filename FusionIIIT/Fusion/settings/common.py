@@ -118,6 +118,7 @@ INSTALLED_APPS = [
     'applications.central_mess',
     'applications.complaint_system',
     'applications.filetracking',
+    'applications.ps1',
     'applications.finance_accounts',
     'applications.health_center',
     'applications.online_cms',

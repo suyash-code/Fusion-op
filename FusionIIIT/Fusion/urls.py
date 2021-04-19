@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^leave/', include('applications.leave.urls')),
     url(r'^placement/', include('applications.placement_cell.urls')),
     url(r'^filetracking/', include('applications.filetracking.urls')),
+    url(r'^ps1/', include('applications.ps1.urls')),
     url(r'^spacs/', include('applications.scholarships.urls')),
     url(r'^visitorhostel/', include('applications.visitor_hostel.urls')),
     url(r'^office/', include('applications.office_module.urls')),
