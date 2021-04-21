@@ -18,9 +18,13 @@ def ps1(request):
         The function is used to create files by current user(employee).
         It adds the employee(uploader) and file datails to a file(table) of filetracking(model)
         if he intends to create file.
+
         @param:
                 request - trivial.
+
         @variables:
+
+
                 uploader - Employee who creates file.
                 subject - Title of the file.
                 description - Description of the file.
@@ -59,7 +63,7 @@ def ps1(request):
                 financial_approval=request.POST.get('financial_approval')
                 purchased =request.POST.get('purchased')
 
-                file=File.objects.create(
+                File.objects.create(
                     uploader=uploader,
                     description=description,
                     subject=subject,
@@ -68,7 +72,7 @@ def ps1(request):
                 )
 
                 IndentFile.objects.create(
-                    file_info=file,
+                    file_info=1,
                     item_name= item_name,
                     quantity=quantity,      
                     present_stock=present_stock,             
@@ -230,15 +234,14 @@ def composed_indents(request):
     }
     return render(request, 'ps1/composed_indents.html', context)
 
-
 @login_required(login_url = "/accounts/login")
 def indentview(request,id):
 
 
 
-    # print(request.user.extrainfo.uploaded_files.all())
+    print(request.user.extrainfo.uploaded_files.all())
     draft_indent = IndentFile.objects.filter(file_info__in=request.user.extrainfo.uploaded_files.all()).select_related('file_info')
-    # print(draft_indent)
+    print(draft_indent)
     draft = [ indent.file_info for indent in draft_indent ]    
 
     extrainfo = ExtraInfo.objects.all()
@@ -284,7 +287,7 @@ def fileview1(request,id):
     }
     return render(request, 'filetracking/fileview1.html', context)
 @login_required(login_url = "/accounts/login")
-def indentview2(request,id):
+def fileview2(request,id):
 
 
 
@@ -303,7 +306,7 @@ def indentview2(request,id):
         'in_file': in_file,
         'designations': designations,
     }
-    return render(request, 'ps1/indentview2.html', context)
+    return render(request, 'filetracking/fileview2.html', context)
 @login_required(login_url = "/accounts/login")
 def outward(request):
     """
@@ -311,8 +314,10 @@ def outward(request):
         which are filtered from Tracking(table) objects by current user i.e. current_id.
         It displays files sent by user to other employees of a Tracking(table) of filetracking(model)
         in the 'Outbox' tab of template.
+
         @param:
                 request - trivial.
+
         @variables:
                 out - The Tracking object filtered by current_id i.e, present working user.
                 context - Holds data needed to make necessary changes in the template.
@@ -332,8 +337,10 @@ def inward(request):
             employees which are filtered from Tracking(table) objects by current user i.e.receiver_id.
             It displays files received by user from other employees of a Tracking(table) of
             filetracking(model) in the 'Inbox' tab of template.
+
             @param:
                     request - trivial.
+
             @variables:
                     in_file - The Tracking object filtered by receiver_id i.e, present working user.
                     context - Holds data needed to make necessary changes in the template.
@@ -346,7 +353,7 @@ def inward(request):
         'designation': designation,
     }
 
-    return render(request, 'ps1/inwardIndent.html', context)
+    return render(request, 'filetracking/inward.html', context)
 @login_required(login_url = "/accounts/login")
 def confirmdelete(request,id):
     file = File.objects.get(pk = id)
@@ -358,7 +365,7 @@ def confirmdelete(request,id):
     return render(request, 'filetracking/confirmdelete.html',context)
 
 @login_required(login_url = "/accounts/login")
-def forwardindent(request, id):
+def forward(request, id):
     """
             The function is used to forward files received by user(employee) from other
             employees which are filtered from Tracking(table) objects by current user
@@ -367,9 +374,11 @@ def forwardindent(request, id):
             along with their remarks and attachments
             It displays details file of a File(table) and remarks and attachments of user involved
             in file of Tracking(table) of filetracking(model) in the template.
+
             @param:
                     request - trivial.
                     id - id of the file object which the user intends to forward to other employee.
+
             @variables:
                     file - The File object.
                     track - The Tracking object.
@@ -382,15 +391,14 @@ def forwardindent(request, id):
                     context - Holds data needed to make necessary changes in the template.
     """
     # start = timer()
-    
+    file = get_object_or_404(File, id=id)
     # end = timer()
-    indent=IndentFile.objects.select_related('file_info').get(file_info=id)
-    file=indent.file_info
+    # print (end-start)
+
     # start = timer()
-    track = Tracking.objects.select_related('file_id__uploader__user','file_id__uploader__department','file_id__designation','current_id__user','current_id__department',
-'current_design__user','current_design__working','current_design__designation','receiver_id','receive_design').filter(file_id=file)
+    track = Tracking.objects.filter(file_id=file)
     # end = timer()
-    
+    # print (end-start)
 
 
 
@@ -404,14 +412,14 @@ def forwardindent(request, id):
                 remarks = request.POST.get('remarks')
 
                 sender = request.POST.get('sender')
-                current_design = HoldsDesignation.objects.select_related('user','working','designation').get(id=sender)
+                current_design = HoldsDesignation.objects.get(id=sender)
 
                 receiver = request.POST.get('receiver')
                 try:
                     receiver_id = User.objects.get(username=receiver)
                 except Exception as e:
                     messages.error(request, 'Enter a valid destination')
-                    designations = HoldsDesignation.objects.select_related('user','working','designation').filter(user=request.user)
+                    designations = HoldsDesignation.objects.filter(user=request.user)
 
                     context = {
                         # 'extrainfo': extrainfo,
@@ -420,13 +428,17 @@ def forwardindent(request, id):
                         'file': file,
                         'track': track,
                     }
-                    return render(request, 'ps1/forwardindent.html', context)
+                    return render(request, 'filetracking/forward.html', context)
+                #print("Receiver_id = ")
+                print(receiver_id)
                 receive = request.POST.get('recieve')
+                print("recieve = ")
+                print(receive)
                 try:
                     receive_design = Designation.objects.get(name=receive)
                 except Exception as e:
                     messages.error(request, 'Enter a valid Designation')
-                    designations = HoldsDesignation.objects.select_related('user','working','designation').filter(user=request.user)
+                    designations = HoldsDesignation.objects.filter(user=request.user)
 
                     context = {
                         # 'extrainfo': extrainfo,
@@ -435,8 +447,10 @@ def forwardindent(request, id):
                         'file': file,
                         'track': track,
                     }
-                    return render(request, 'ps1/forwardindent.html', context)
+                    return render(request, 'filetracking/forward.html', context)
 
+                # print("receive_designation = ")
+                # print(receive_designation)
                 # receive_design = receive_designation[0]
                 upload_file = request.FILES.get('myfile')
                 # return HttpResponse ("success")
@@ -451,9 +465,9 @@ def forwardindent(request, id):
                 )
             messages.success(request, 'File sent successfully')
     # start = timer()
-    extrainfo = ExtraInfo.objects.select_related('user','department').all()
-    holdsdesignations = HoldsDesignation.objects.select_related('user','working','designation').all()
-    designations = HoldsDesignation.objects.select_related('user','working','designation').filter(user=request.user)
+    extrainfo = ExtraInfo.objects.all()
+    holdsdesignations = HoldsDesignation.objects.all()
+    designations = HoldsDesignation.objects.filter(user=request.user)
 
     context = {
         # 'extrainfo': extrainfo,
@@ -461,10 +475,9 @@ def forwardindent(request, id):
         'designations':designations,
         'file': file,
         'track': track,
-        'indent':indent,
     }
 
-    return render(request, 'ps1/forwardindent.html', context)
+    return render(request, 'filetracking/forward.html', context)
 
 @login_required(login_url = "/accounts/login")
 def archive(request):
@@ -558,3 +571,5 @@ def forward_inward(request,id):
     }
     print(file.is_read)
     return render(request, 'filetracking/forward.html', context)
+
+
