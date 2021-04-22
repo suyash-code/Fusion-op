@@ -449,6 +449,31 @@ def forwardindent(request, id):
                     remarks=remarks,
                     upload_file=upload_file,
                 )
+
+                check=str(request.user)
+                val=str(request.POST.get('approval'))
+
+                if val=="accept":
+                    print("correct")
+                    if check=="ptandon" or check=="atul" or check=="prabin16" or check=="subirs" or check=="prabir":
+                        indent.head_approval=True
+                    elif check=="director":
+                        indent.director_approval=True
+                    elif check=="rizwan":
+                        indent.financial_approval=True
+                
+                else:
+                    if check=="ptandon" or check=="atul" or check=="prabin16" or check=="subirs" or check=="prabir":
+                        indent.head_approval=False
+                    elif check=="director":
+                        indent.director_approval=False
+                    elif check=="rizwan":
+                        indent.financial_approval=False
+                    
+
+                indent.save()
+
+
             messages.success(request, 'File sent successfully')
     # start = timer()
     extrainfo = ExtraInfo.objects.select_related('user','department').all()
