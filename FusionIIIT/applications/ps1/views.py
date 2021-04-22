@@ -54,9 +54,9 @@ def ps1(request):
                 budgetary_head=request.POST.get('budgetary_head')
                 expected_delivery=request.POST.get('expected_delivery')
                 sources_of_supply=request.POST.get('sources_of_supply')
-                head_approval=request.POST.get('head_approval')
-                director_approval=request.POST.get('director_approval')
-                financial_approval=request.POST.get('financial_approval')
+                head_approval=False
+                director_approval=False
+                financial_approval=False
                 purchased =request.POST.get('purchased')
 
                 file=File.objects.create(
@@ -110,9 +110,9 @@ def ps1(request):
                 budgetary_head=request.POST.get('budgetary_head')
                 expected_delivery=request.POST.get('expected_delivery')
                 sources_of_supply=request.POST.get('sources_of_supply')
-                head_approval=request.POST.get('head_approval')
-                director_approval=request.POST.get('director_approval')
-                financial_approval=request.POST.get('financial_approval')
+                head_approval=False
+                director_approval=False
+                financial_approval=False
                 purchased =request.POST.get('purchased')
 
                 file = File.objects.create(
@@ -355,7 +355,7 @@ def confirmdelete(request,id):
 
         'j': file,
     }
-    return render(request, 'filetracking/confirmdelete.html',context)
+    return render(request, 'ps1/confirmdelete.html',context)
 
 @login_required(login_url = "/accounts/login")
 def forwardindent(request, id):
@@ -539,7 +539,7 @@ def delete(request,id):
     #problem over here no need of render since it doesnot affect the url
     #return render(request, 'filetracking/drafts.html', context)
 
-    return redirect('/filetracking/drafts/')
+    return redirect('/ps1/composed_indents/')
 
 def forward_inward(request,id):
     file = get_object_or_404(File, id=id)
