@@ -9,7 +9,7 @@
     <div class="ui pointing secondary menu">
         <h3>
             <a class="active item" data-tab="composefile">
-            Compose New File
+            Compose New Indent
             </a>
         </h3>
     </div>
@@ -35,11 +35,12 @@
                     <label>Designation</label>
                     <select class="ui fluid search selection dropdown" name="receiver">
                         <option selected hidden>Select</option>
-                    </select>
+
+                    </select>
                 </div>-->
 
                 <div class="field">
-                        <label>Title of File</label>
+                        <label>Title of Indent File</label>
                         <textarea rows="1" name="title" required></textarea>
                 </div>
 
@@ -100,7 +101,7 @@
 
                 <div class="field">
                     <label>Expected Delivery</label>
-                    <textarea rows="3" name="expected_delivery" required></textarea>
+                    <input type="date" id="start" name="expected_delivery">
                 </div>
 
 
@@ -142,7 +143,7 @@
                    </label>
                 </div>
 
-                <div class="field">
+                <!-- <div class="field">
                    <h5>Director Approval</h5>
                    <label class="radio-inline">
                        <input type="radio" id="Yes" name="director_approval" value="True">Yes
@@ -172,7 +173,7 @@
                    <label class="radio-inline">
                        <input type="radio" id="Yes" name="head_approval" value="False">No
                    </label>
-                </div>
+                </div> -->
 
                 <div class="field">
                     <label>Create as:
@@ -222,7 +223,7 @@
                                     <datalist  id="input_list">
 
                                     </datalist>
-                               
+                               
                             </label>
                 </div>
 
@@ -234,7 +235,7 @@
                             </datalist>
 
 
-                       
+                       
                     </label>
                 </div>
 
@@ -343,3 +344,5 @@
         leaveAddress.style.display = chkAddress.checked ? "block" : "none";
     }
 </script>
+
+
