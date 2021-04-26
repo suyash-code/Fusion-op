@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from applications.globals.models import Staff
+from applications.globals.models import Staff,ExtraInfo
 from applications.filetracking.models import File
 
 class IndentFile(models.Model):
@@ -26,9 +26,13 @@ class IndentFile(models.Model):
     class Meta:
         db_table = 'IndentFile'
 
-class Stock(models.Model):
+class StockEntry(models.Model):
+
     item_id=models.OneToOneField(IndentFile, on_delete=models.CASCADE,primary_key=True)
-    dealing_assistant_id=models.ForeignKey(Staff, on_delete=models.CASCADE)
+    #item_id=models.IntegerField( blank=False,primary_key=True)
+    dealing_assistant_id=models.ForeignKey(ExtraInfo, on_delete=models.CASCADE)
+    #dealing_assistant_id=models.CharField(max_length=250, blank=False,default='-1')
+   
     vendor=models.CharField(max_length=250, blank=False)
     item_name=models.CharField(max_length=250, blank=False)
     current_stock=models.IntegerField(blank=False)
@@ -36,4 +40,4 @@ class Stock(models.Model):
     bill=models.FileField(blank=False)
 
     class Meta:
-        db_table = 'Stock'
+        db_table = 'StockEntry'
